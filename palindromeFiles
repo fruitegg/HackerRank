@@ -1,3 +1,26 @@
+def makePalindromeDictionary(L):
+    ''' L is the list of possible transformations (in the form of tuples) '''
+    d = {} # dictionary of transformations (again, these are tuples)
+    for element in L:
+        if element[0] not in d:
+            d[element[0]] = [element[1]]
+        elif element[1] not in d[element[0]]:
+            d[element[0]] += [element[1]]
+        if element[1] not in d:
+            d[element[1]] = [element[0]]
+        elif element[0] not in d[element[1]]:
+            d[element[1]] += [element[0]]
+
+    returnDictionary = d
+
+    for i in d:
+        for j in d:
+            for k in d[j]:
+                if i != j and i in d[j] and k not in returnDictionary[i]: 
+                    returnDictionary[i] += [k]
+
+    return returnDictionary
+
 def getUniqueDictionaries(dictionary):
     uniqueLists = []
     for i in dictionary:
@@ -27,7 +50,7 @@ def findPalindrome(s):
     return L[0][-1]
 
 def bestPalindrome(S,L):
-    S = list(map(int, S.strip().split(' '))) # NOTE: comment this out when submitting!!
+    S = list(map(int, S.strip().split(' '))) # comment this out when submitting!!
     dic = makePalindromeDictionary(L) # this makes the palindrome dictionary
 
     maxDicEntry = 0
