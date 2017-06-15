@@ -51,17 +51,17 @@ def findPalindrome(s):
 
 def bestPalindrome(S,L):
     S = list(map(int, S.strip().split(' ')))
-    dic = makePalindromeDictionary(L)
+    dic = makePalindromeDictionary(L) # this makes the palindrome dictionary
 
     maxDicEntry = 0
     bestEntry = 0
 
-    changeLists = getUniqueDictionaries(dic)
+    changeLists = getUniqueDictionaries(dic) # This retrieves the different dictionaries in the palindrome dictionary, so that we can transform all related numbers into a common integer.
     
     returnList = []
-    for j in changeLists:
+    for j in changeLists: # These nested loops change all the elements in S into as many of the same numbers as possible.
         for k in range(0,len(S)):
             if S[k] in j:
                 returnList += [j[0]]
-    SNew = " ".join(map(str,returnList))
-    return findPalindrome(SNew)
+
+    return findPalindrome(returnList) # Finally, we compute the length of the max palindrome sequence.
