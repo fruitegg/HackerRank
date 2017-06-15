@@ -1,0 +1,67 @@
+def makePalindromeDictionary(L):
+    ''' L is the list of possible transformations (in the form of tuples) '''
+    d = {} # dictionary of transformations (again, these are tuples)
+    for element in L:
+        if element[0] not in d:
+            d[element[0]] = [element[1]]
+        elif element[1] not in d[element[0]]:
+            d[element[0]] += [element[1]]
+        if element[1] not in d:
+            d[element[1]] = [element[0]]
+        elif element[0] not in d[element[1]]:
+            d[element[1]] += [element[0]]
+
+    returnDictionary = d
+
+    for i in d:
+        for j in d:
+            for k in d[j]:
+                if i != j and i in d[j] and k not in returnDictionary[i]: 
+                    returnDictionary[i] += [k]
+
+    return returnDictionary
+
+def getUniqueDictionaries(dictionary):
+    uniqueLists = []
+    for i in dictionary:
+        for j in dictionary:
+            tempDic = dictionary[i]
+            tempDic.sort()  # Highly inefficient, I know. Was frantic here due to time constraint...
+            if tempDic[0] not in dictionary[j] and tempDic not in uniqueLists:
+                uniqueLists += [ tempDic ]
+    return uniqueLists
+
+def findPalindrome(s): 
+    stringLen = len(s) 
+    L = [[0 for i in range(stringLen)] for j in range(stringLen)] 
+    for i in range(stringLen):
+        L[i][i] = 1
+    for substring_length in range(2, stringLen+1): # (We already did the diagonals, length 1)
+        for i in range(stringLen - substring_length + 1): 
+            j = i + substring_length - 1
+            startingLetter = s[i] 
+            endingLetter = s[j]
+            if substring_length == 2 and startingLetter == endingLetter: 
+                L[i][j] = 2 
+            elif startingLetter == endingLetter:
+                L[i][j] = 2 + L[i+1][j-1] #We move down a row and left a column 
+            else: 
+                L[i][j] = max(L[i+1][j], L[i][j-1])
+    return L[0][-1]
+
+def bestPalindrome(S,L):
+    S = list(map(int, S.strip().split(' ')))
+    dic = makePalindromeDictionary(L)
+
+    maxDicEntry = 0
+    bestEntry = 0
+
+    changeLists = getUniqueDictionaries(dic)
+    
+    returnList = []
+    for j in changeLists:
+        for k in range(0,len(S)):
+            if S[k] in j:
+                returnList += [j[0]]
+    SNew = " ".join(map(str,returnList))
+    return findPalindrome(SNew)
